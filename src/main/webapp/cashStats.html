@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+/* 예정  */
+.point {
+	color: fuchsia;
+}
+</style>
+</head>
+<body>
+	<h1>CashBook Stats Data</h1>
+<body>
+	<a href="http://localhost/admin/index">메인페이지</a>
+	<a href="http://localhost/admin/cashbookByMonth">월별 가계부</a>
+	<a href="http://localhost/admin/noticeList">공지사항</a>
+	<a href="http://localhost/admin/logout">logout</a>
+	<a href="/cashStats.html">연도별 월간 총 지출액</a>
+	<div>
+		<div>
+			<!--호출-->
+			<span> 연도별 월 지출액 :</span>
+			<button id="totalMonthlyExpendituresByYearTable" type="button">테이블</button>
+			<button id="totalMonthlyExpendituresByYearChart" type="button">차트</button>
+			<button id="totalMonthlyExpendituresByYearExcel" type="button">엑셀</button>
+		</div>
+		<!-- 출력 -->
+		<div>
+			<span id="totalMonthlyExpendituresByYearTableResult" class="point">
+				데이터 결과물이 테이블, 차트, 엑셀 파일 다운로드 중 하나로 나옵니다 </span>
+		</div>
+	</div>
+
+</body>
+</body>
+
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+	$("#totalMonthlyExpendituresByYearTable").click(function(){
+		/* $('#totalMonthlyExpendituresByYearTableResult').html('totalMonthlyExpendituresByYear Table Result'); */
+		$.ajax({
+			url:'/totalMonthlyExpendituresByYear',
+			type:'get',
+			success: function(data) {	
+				console.log(data);
+				let html = `
+				<table border="1">
+				<tr>
+					<th>January</th>
+					<th>February</th>
+					<th>March</th>
+					<th>April</th>
+					<th>May</th>
+					<th>June</th>
+					<th>July</th>
+					<th>August</th>
+					<th>September</th>
+					<th>October</th>
+					<th>November</th>
+					<th>December</th>
+				</tr>
+				<tr>
+					<td>${data.January}</td>
+					<td>${data.February}</td>
+					<td>${data.March}</td>
+					<td>${data.April}</td>
+					<td>${data.May}</td>
+					<td>${data.June}</td>
+					<td>${data.July}</td>
+					<td>${data.August}</td>
+					<td>${data.September}</td>
+					<td>${data.October}</td>
+					<td>${data.November}</td>
+					<td>${data.December}</td>
+				</tr>
+				</table>
+				`;
+				$('#totalMonthlyExpendituresByYearTableResult').html(html);
+			}	
+		});
+	});
+
+	</script>
+</html>
