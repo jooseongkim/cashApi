@@ -12,12 +12,13 @@
 </head>
 <body>
 	<h1>CashBook Stats Data</h1>
-<body>
-	<a href="http://localhost/admin/index">메인페이지</a>
-	<a href="http://localhost/admin/cashbookByMonth">월별 가계부</a>
-	<a href="http://localhost/admin/noticeList">공지사항</a>
-	<a href="http://localhost/admin/logout">logout</a>
-	<a href="/cashStats.html">연도별 월간 총 지출액</a>
+	<div>
+		<a href="http://localhost/admin/index">메인페이지</a> <a
+			href="http://localhost/admin/cashbookByMonth">월별 가계부</a> <a
+			href="http://localhost/admin/noticeList">공지사항</a> <a
+			href="http://localhost/admin/logout">logout</a> <a
+			href="/cashStats.html">연도별 월간 총 지출액</a>
+	</div>
 	<div>
 		<div>
 			<!--호출-->
@@ -31,15 +32,113 @@
 			<span id="totalMonthlyExpendituresByYearTableResult" class="point">
 				데이터 결과물이 테이블, 차트, 엑셀 파일 다운로드 중 하나로 나옵니다 </span>
 		</div>
+		<div>
+			<canvas id="myChart"></canvas>
+		</div>
 	</div>
-
+	<!-- 요쳥 2번 -->
+	<div>
+		<div>
+			<!--호출-->
+			<span>2) 연도별 수입/지출 :</span> <input type="text" id="year">
+			<button id="totalOutAndInByYearChart" type="button">차트</button>
+		</div>
+		<!-- 출력 -->
+		<div>
+			<canvas id="pieChart"></canvas>
+		</div>
+	</div>
 </body>
-</body>
-
-
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script type="text/javascript">
+	$('#totalOutAndInByYearChart').click(function(){
+		$.ajax({
+			url:'/totalOutAndInByYear/'+$('#year').val(),
+			type:'get',
+			success:function(data){
+			let pieCtx = $('#pieChart');
+			let pieChart = new Chart(pieCtx,{
+				type:'pie',
+				data:{
+					labels : ['수입','지출'], //항목(범주)
+					datasets:[{ 
+						backgroundColor : ['rgba(152, 251, 152, 0.5)','rgba(75, 192, 192, 0.5)'],
+						borderColor: ['rgba(152, 251, 152, 2)','rgba(75, 192, 192, 2)' ],
+						data:[data.수입, data.지출] //데이터
+					}]
+				},
+				options:{}
+			});
+			}
+		});
+	});
+	
+	$("#totalMonthlyExpendituresByYearChart").click(function(){
+		$.ajax({
+			url:'/totalMonthlyExpendituresByYear',
+			type:'get',
+			success:function(data){
+			var ctx = document.getElementById('myChart').getContext('2d');
+			var chart = new Chart(ctx, {
+			 type: 'bar', // chart의 종류
+			 data: {
+				 labels:['1','2','3','4','5','6','7','8','9','10','11','12'],
+				 datasets:[{
+					 label:'total Expenditures By Months',
+					 backgroundColor: [
+			                'rgba(255, 99, 132, 0.2)',
+			                'rgba(54, 162, 235, 0.2)',
+			                'rgba(255, 206, 86, 0.2)',
+			                'rgba(75, 192, 192, 0.2)',
+			                'rgba(153, 102, 255, 0.2)',
+			                'rgba(255, 159, 64, 0.2)',
+			                'rgba(255, 99, 132, 0.2)',
+			                'rgba(54, 162, 235, 0.2)',
+			                'rgba(255, 206, 86, 0.2)',
+			                'rgba(75, 192, 192, 0.2)',
+			                'rgba(153, 102, 255, 0.2)',
+			                'rgba(255, 159, 64, 0.2)'
+			            ],
+			            borderColor: [
+			                'rgba(255, 99, 132, 1)',
+			                'rgba(54, 162, 235, 1)',
+			                'rgba(255, 206, 86, 1)',
+			                'rgba(75, 192, 192, 1)',
+			                'rgba(153, 102, 255, 1)',
+			                'rgba(255, 159, 64, 1)',
+			                'rgba(255, 99, 132, 1)',
+			                'rgba(54, 162, 235, 1)',
+			                'rgba(255, 206, 86, 1)',
+			                'rgba(75, 192, 192, 1)',
+			                'rgba(153, 102, 255, 1)',
+			                'rgba(255, 159, 64, 1)'
+			            ],
+						 data:[
+							 data.January, 
+							 data.February,
+							 data.March,
+							 data.April,
+							 data.May,
+							 data.June,
+							 data.July,
+							 data.August,
+							 data.September,
+							 data.October,
+							 data.November,
+							 data.December],
+						 
+						 borderWidth: 1
+				 }]
+			 }, // chart안에 사용되는 모든 데이터(x,y축 이름, dataset)
+			 options:{}
+				});
+			}
+		});
+	});
+
+
 
 	$("#totalMonthlyExpendituresByYearTable").click(function(){
 		/* $('#totalMonthlyExpendituresByYearTableResult').html('totalMonthlyExpendituresByYear Table Result'); */
